@@ -21,6 +21,7 @@ const AsgaardSofaDetailPage = () => {
       name: "Asgaard Sofa",
       price: 30000,
       image: "/images/Asgaard.png",
+      quantity: 1,
     };
     addToCart(product);
     setIsCartOpen(true);
