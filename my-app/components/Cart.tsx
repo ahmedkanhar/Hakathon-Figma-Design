@@ -70,7 +70,7 @@ export default function Cart({
           
           <div className="mt-6 bg-white">
           
-            <div className="fixed right-0 bottom-4 bg-white items-center h-[40px] justify-between gap-4 sm:gap-8 w-full sm:w-[360px] mx-auto">
+            <div className="fixed right-0 bottom-4 items-center h-[40px] justify-between gap-4 sm:gap-8 w-full sm:w-[360px] mx-auto">
             <div className="sm:flex gap-10">
   {/* Wrapper div for grid on mobile */}
   <div className="grid grid-cols-1 gap-4 sm:flex sm:gap-10">
