@@ -71,7 +71,7 @@ export default function Cart({
           <div className="mt-6 bg-white">
           
             <div className="fixed right-0 bottom-4 bg-white items-center h-[40px] justify-between gap-4 sm:gap-8 w-full sm:w-[340px] mx-auto">
-             <div className="gird sm:grid-cols-1 gap-10">
+             <div className="flex gap-10">
              
              <Link href="/cart">
                 <button className="w-[131px] h-[31px] py-2 px-6 border-2 border-black text-black rounded-full flex items-center justify-center hover:bg-blue-500 hover:text-white transition">
