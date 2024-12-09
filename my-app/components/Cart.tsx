@@ -19,7 +19,7 @@ export default function Cart({
   isCartOpen: boolean;
   setIsCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { cartItems, removeFromCart } = useCart(); 
+  const { cartItems, removeFromCart } = useCart(); // Added removeFromCart function
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
@@ -70,24 +70,21 @@ export default function Cart({
           
           <div className="mt-6 bg-white">
           
-            <div className="fixed right-0 bottom-4 items-center h-[40px] justify-between gap-4 sm:gap-8 w-full sm:w-[360px] mx-auto">
-            <div className="sm:flex sm:right-6 gap-10">
+            <div className="fixed right-0 bottom-4 bg-white items-center h-[40px] justify-between gap-4 sm:gap-8 w-full sm:w-[360px] mx-auto">
+             <div className="flex gap-10">
+             
+             <Link href="/cart">
+                <button className="w-[131px] h-[31px] py-2 px-6 border-2 border-black text-black rounded-full flex items-center justify-center hover:bg-blue-500 hover:text-white transition">
+                  View Cart
+                </button>
+              </Link>
 
-  <div className="grid grid-cols-1 gap-4 sm:flex sm:gap-10">
-    <Link href="/cart">
-      <button className="w-[131px] h-[31px] py-2 px-6 border-2 border-black text-black rounded-full flex items-center justify-center hover:bg-blue-500 hover:text-white transition">
-        View Cart
-      </button>
-    </Link>
-
-    <Link href="/checkout">
-      <button className="w-[131px] h-[31px] py-2 px-6 border-2 border-black text-black rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white transition">
-        Checkout
-      </button>
-    </Link>
-  </div>
-</div>
-
+              <Link href="/checkout">
+                <button className="w-[131px] h-[31px] py-2 px-6 border-2 border-black text-black rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white transition">
+                  Checkout
+                </button>
+              </Link>
+             </div>
             </div>
           </div>
         </div>
