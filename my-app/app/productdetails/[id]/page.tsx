@@ -145,15 +145,15 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
         {/* Text Content */}
         <div className="text p-4 text-gray-500 text-sm md:text-base leading-relaxed">
           <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum dolorum ea blanditiis
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum dolorum ea blanditiis
             deleniti labore perferendis minus doloribus ducimus eveniet. Tenetur ipsa officia labore ex
-            pariatur numquam odio deserunt, praesentium deleniti! Dignissimos iste illo, dolore aliquam
+            pariatur numquam odio deserunt praesentium deleniti! Dignissimos iste ill dolore aliquam
             magnam ipsum nihil illum.
             <br />
             <br />
-            Labore eos cupiditate, ipsum vero voluptatibus officiis. Libero harum ducimus quod voluptate
-            alias beatae, voluptatum, provident, obcaecati iste cumque numquam reprehenderit? In,
-            delectus provident placeat, ei enim recusandae voluptatem dolorum et vero? Ullam dolore
+            Labore eos cupiditate ipsum vero voluptatibus officiis. Libero harum ducimus quod voluptate
+            alias beatae voluptatum, provident, obcaecati iste cumque numquam reprehenderit? In
+            delectus provident placeat ei enim recusandae voluptatem dolorum et vero? Ullam dolore
             repellendus animi obcaecati totam dolorem consectetur id sapiente modi quam? Eius ipsum
             minima amet! Nihil distinctio hic sunt pariatur fugiat tenetur Lorem ipsum dolor sit amet
             consectetur adipisicing elit. Minima maiores nobis quae esse. Error maxime ex dolorum itaque
