@@ -1,4 +1,6 @@
-import { createClient } from '@sanity/client';
+
+import { client } from '@/sanity/lib/client'; // Use the local client
+
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
