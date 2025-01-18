@@ -1,95 +1,63 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { client } from "../sanity/lib/client";
+import { useCart } from "@/app/context/CartContext"; // Adjust the path if necessary
+
+const fetchRelatedProducts = async () => {
+  const query = `*[_type == "product"] | order(publishedAt desc) [0...4] {
+    _id,
+    name,
+    price,
+    "imageUrl": image.asset->url
+  }`;
+
+  return await client.fetch(query);
+};
+
 const RelatedPost = () => {
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const { addToCart } = useCart();
+
+  useEffect(() => {
+    fetchRelatedProducts().then(setRelatedProducts);
+  }, []);
+
+  if (!relatedProducts.length) {
+    return <p>No related products available.</p>; // Optionally, you could show a "No related products" message
+  }
+
   return (
-    <section className="w-full h-auto pt-32 pb-32 px-8 bg-[#FFFFFF]">
-
-      <div className="text-center mb-12">
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4">
-          Related Products
-        </h2>
+    <div className="w-full px-8 py-16 bg-gray-100">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Related Products</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+        {relatedProducts.map((product) => (
+          <div key={product._id} className="border rounded-lg p-4 shadow-sm">
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="w-full h-48 object-cover rounded-md"
+            />
+            <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
+            <p className="text-gray-500">Rs. {product.price}</p>
+            <button
+              onClick={() =>
+                addToCart({
+                  id: product._id,
+                  name: product.name,
+                  price: product.price,
+                  quantity: 1,
+                  image: product.imageUrl,
+                })
+              }
+              className="mt-4 py-2 px-6 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Add to Cart
+            </button>
+          </div>
+        ))}
       </div>
-
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-        {/* Box 1 */}
-        <div className="flex flex-col items-center">
-          <div className="w-[300px] h-[300px] mb-4">
-            <img
-              src="/images/modularsofa.png" 
-              alt="Side Table"
-              className="w-full h-full object-contain"
-            />
-          </div>
-
-          <div className="text-[16px] font-medium text-black mb-3 text-start w-full">
-            Trenton modular sofa_3
-          </div>
-          <div className="text-xl font-bold text-gray-800 text-start w-full">
-            Rs.25000.00
-          </div>
-        </div>
-
-        {/* Box 2 */}
-        <div className="flex flex-col items-center">
-          <div className="w-[300px] h-[300px] mb-4">
-            <img
-              src="/images/outdoor.png" 
-              alt="Dining Table"
-              className="w-full h-full object-contain"
-            />
-          </div>
-      
-          <div className="text-[16px] font-medium text-black mb-3 text-start w-full">
-            Granite dining table with chair
-          </div>
-          <div className="text-xl font-bold text-gray-800 text-start w-full">
-            Rs.25000.00
-          </div>
-        </div>
-
-        {/* Box 3 */}
-        <div className="flex flex-col items-center">
-          <div className="w-[300px] h-[300px] mb-4">
-            <img
-              src="/images/diningtable.png" 
-              alt="Chair"
-              className="w-full h-full object-contain"
-            />
-          </div>
-          
-          <div className="text-[16px] font-medium text-black mb-3 text-start w-full">
-            Outdoor bar table and stool
-          </div>
-          <div className="text-xl font-bold text-gray-800 text-start w-full">
-            Rs.25000.00
-          </div>
-        </div>
-
-        {/* Box 4 */}
-        <div className="flex flex-col items-center">
-          <div className="w-[300px] h-[300px] mb-4">
-            <img
-              src="/images/plainconsole.png" 
-              alt="Console"
-              className="w-full h-full object-contain"
-            />
-          </div>
-
-          <div className="text-[16px] font-medium text-black mb-3 text-start w-full">
-            Plain console with teak mirror
-          </div>
-          <div className="text-xl font-bold text-gray-800 text-start w-full">
-            Rs.25000.00
-          </div>
-        </div>
-      </div>
-
-      
-      <div className="flex justify-center mt-12">
-        <a href="#" className="text-lg font-medium text-gray-800 hover:underline border-b-2 border-gray-800">
-          View More
-        </a>
-      </div>
-    </section>
+    </div>
   );
 };
 

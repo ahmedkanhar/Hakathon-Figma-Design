@@ -1,32 +1,44 @@
 "use client";
+
+import { useState } from "react";
 import Navbar from "@/components/NavBar";
 import Products from "@/components/Products";
-import { SlidersHorizontal, GripHorizontal, AlignVerticalSpaceAround, ChevronRight } from "lucide-react";
-import { useState } from "react";
 import ShopBanner from "@/components/ShopBanner";
 import Footer from "@/components/Footer";
+import {
+  SlidersHorizontal,
+  GripHorizontal,
+  AlignVerticalSpaceAround,
+} from "lucide-react";
 
 const Shop = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 3; 
+  const itemsPerPage = 16; // Number of products per page
+  const [totalProducts, setTotalProducts] = useState(0); // Track total products
+  const [sortOption, setSortOption] = useState("default"); // Track sorting option
 
-  
+  const handleTotalProducts = (count: number) => {
+    setTotalProducts(count);
+  };
+
+  const totalPages = Math.ceil(totalProducts / itemsPerPage); // Total number of pages
+
   const goToNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage((prevPage) => prevPage + 1);
+      setCurrentPage((prev) => prev + 1);
     }
   };
 
-  const changePage = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-     
       <Navbar bgColor="bg-white" />
 
-      
       <section
         className="w-full h-[316px] bg-cover bg-center"
         style={{
@@ -34,21 +46,12 @@ const Shop = () => {
         }}
       >
         <div className="w-full h-full bg-black bg-opacity-50 flex flex-col items-center justify-center">
-          <img
-            src="/images/logo.png"
-            alt="Shop Logo"
-            className="h-30 mb-2"
-          />
+          <img src="/images/logo.png" alt="Shop Logo" className="h-30 mb-2" />
           <h1 className="text-3xl font-bold tracking-wider text-white mt-2">Shop</h1>
-          <div className="text-white mt-2 text-lg flex items-center gap-1">
-            <span>Home</span>
-            <ChevronRight className="w-4 h-4" />
-            <span>Shop</span>
-          </div>
         </div>
       </section>
 
-      
+      {/* Filter and Sorting Section */}
       <div className="flex flex-col sm:flex-row items-center justify-between w-full h-[100px] px-6 bg-gray-100 border-b">
         <div className="flex items-center gap-6 sm:gap-4">
           <SlidersHorizontal className="text-gray-600 text-lg" />
@@ -58,44 +61,52 @@ const Shop = () => {
             <AlignVerticalSpaceAround className="text-gray-600 text-lg cursor-pointer" />
             <div className="w-[2px] h-[30px] bg-gray-400 hidden sm:block" />
             <span className="text-gray-800 text-sm font-medium">
-              Showing {currentPage * 16 - 15}-{Math.min(currentPage * 16, 16)} of 16
+              Showing {(currentPage - 1) * itemsPerPage + 1}-
+              {Math.min(currentPage * itemsPerPage, totalProducts)} of {totalProducts}
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           <span className="text-gray-800 text-sm font-medium">
-            Show <span className="bg-white pl-1">16</span>
+            Show <span className="bg-white pl-1">{itemsPerPage}</span>
           </span>
           <span className="text-gray-600 text-sm">Sort by:</span>
-          <select className="text-gray-800 text-sm border rounded px-2 py-1">
-            <option>Default</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
+          <select
+            className="text-gray-800 text-sm border rounded px-2 py-1"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value="default">Default</option>
+            <option value="Low to High Prices">Price: Low to High</option>
+            <option value="High to Low Prices">Price: High to Low</option>
           </select>
         </div>
       </div>
 
-      
+      {/* Products Section */}
       <div className="flex-grow">
-        <Products />
+        <Products
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+          sortOption={sortOption} // Pass the sorting option to Products
+          onTotalProducts={handleTotalProducts}
+        />
       </div>
 
-      
+      {/* Pagination Section */}
       <div className="flex items-center justify-center mt-4 p-4 bg-white gap-4">
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => changePage(index + 1)}
-            className={`px-4 py-2 border rounded ${
-              currentPage === index + 1
-                ? "bg-blue-600 text-white"
-                : "bg-gray-50 text-gray-800 hover:bg-gray-100"
-            }`}
-          >
-            {index + 1}
-          </button>
-        ))}
+        <button
+          onClick={goToPreviousPage}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 border rounded ${
+            currentPage === 1
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-gray-50 text-gray-800 hover:bg-gray-100"
+          }`}
+        >
+          Previous
+        </button>
         <button
           onClick={goToNextPage}
           disabled={currentPage === totalPages}
@@ -109,15 +120,8 @@ const Shop = () => {
         </button>
       </div>
 
-     
-      <div>
-        <ShopBanner />
-      </div>
-
-     
-      <div>
-        <Footer />
-      </div>
+      <ShopBanner />
+      <Footer />
     </div>
   );
 };

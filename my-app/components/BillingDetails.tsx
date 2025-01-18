@@ -1,7 +1,18 @@
+"use client";
+
+import { useCart } from "@/app/context/CartContext";
+
 export default function BillingDetails() {
+  const { cartItems } = useCart();
+
+  // Calculate the subtotal
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
   return (
     <div className="w-full min-h-[1100px] px-8 py-8 flex gap-8 flex-col md:flex-row">
-      
       <div className="flex-1 bg-white p-8">
         <h1 className="text-2xl font-bold mb-6">Billing Details</h1>
         <form className="space-y-6">
@@ -139,70 +150,82 @@ export default function BillingDetails() {
         </form>
       </div>
 
-      {/* Right Section */}
+      {/* Right Section for Cart Items */}
       <div className="flex-1 bg-white p-8">
-        
         <div className="mb-8">
-      
           <div className="grid grid-cols-2 mb-4">
             <h1 className="text-2xl font-bold">Products</h1>
             <h1 className="text-2xl font-bold text-right">Subtotal</h1>
           </div>
 
-    
-          <div className="grid grid-cols-2 gap-2">
-            <p className="text-gray-700 mb-4">Asgaard Sofa <span className="text-black">X 1</span></p>
-            <p className="text-gray-700 mb-4 text-right">$250000.00</p>
+          {/* Dynamically render cart items */}
+          {cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <div key={item.id} className="grid grid-cols-2 gap-2 mb-4">
+                <p className="text-gray-700">
+                  {item.name} <span className="text-black">X {item.quantity}</span>
+                </p>
+                <p className="text-gray-700 text-right">
+                  Rs. {item.price * item.quantity}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-700">Your cart is empty.</p>
+          )}
 
-            <p className="text-black mb-4">subtotal</p>
-            <p className="text-black mb-4 text-right">$250000.00</p>
+          {/* Subtotal */}
+          <div className="grid grid-cols-2 gap-2">
+            <p className="text-black mb-4">Subtotal</p>
+            <p className="text-black mb-4 text-right">Rs. {subtotal}</p>
           </div>
         </div>
 
-        
+        {/* Total */}
         <div>
           <div className="grid grid-cols-2">
             <h1 className="text-3xl font-bold">Total</h1>
-            <p className="text-yellow-900 text-3xl text-right font-extrabold">$250000.00</p>
+            <p className="text-yellow-900 text-3xl text-right font-extrabold">
+              Rs. {subtotal}
+            </p>
           </div>
         </div>
 
         {/* Divider */}
         <div className="border-t border-gray-300 mt-6"></div>
 
+        {/* Payment Methods */}
         <div className="mt-6">
           <div className="flex items-center">
-            
             <div className="w-2 h-2 bg-gray-800 rounded-full mt-1 mr-3"></div>
-            
             <h2 className="text-xl font-bold">Direct Bank Transfer</h2>
           </div>
-          
+
           <p className="text-gray-700 mt-2">
-            Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+            Make your payment directly into our bank account. Please use your
+            Order ID as the payment reference. Your order will not be shipped
+            until the funds have cleared in our account.
           </p>
         </div>
 
+        {/* Payment Options */}
         <div className="flex flex-col items-start gap-6 mt-4">
-         
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 border border-gray-800 rounded-full flex items-center justify-center">
-             
-            </div>
+            <div className="w-2 h-2 border border-gray-800 rounded-full flex items-center justify-center"></div>
             <p className="text-sm text-gray-600">Direct Bank Transfer</p>
           </div>
 
-         
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 border border-gray-800 rounded-full flex items-center justify-center">
-             
-            </div>
-            <p className="text-sm text-gray-600">Cash on Delievery</p>
+            <div className="w-2 h-2 border border-gray-800 rounded-full flex items-center justify-center"></div>
+            <p className="text-sm text-gray-600">Cash on Delivery</p>
           </div>
         </div>
 
         <p className="text-gray-700 mt-4">
-          Your personal data will be used to support your experience throughout this website&#44; to manage access to your account&#44; and for other purposes described in our <span className="text-lg font-semibold text-black">privacy policy.</span>
+          Your personal data will be used to support your experience throughout
+          this website, to manage access to your account, and for other purposes
+          described in our{" "}
+          <span className="text-lg font-semibold text-black">privacy policy.</span>
         </p>
 
         <div className="flex justify-center mt-8">

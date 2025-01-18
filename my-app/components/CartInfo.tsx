@@ -8,10 +8,11 @@ const CartInfo = () => {
   const { cartItems, removeFromCart } = useCart();
 
   // Calculate subtotal dynamically
-  const subtotal = cartItems.reduce(
+  const subtotal = (cartItems ?? []).reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
+  
 
   return (
     <div className="w-full h-auto p-8 sm:p-16 bg-white flex justify-center items-center">

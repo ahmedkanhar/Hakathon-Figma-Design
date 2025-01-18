@@ -4,12 +4,10 @@ import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import Navbar from "@/components/NavBar";
 import Image from "next/image";
-import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
-import { Heart } from "lucide-react";
+import Cart from "@/components/Cart";
 import Description from "@/components/Discription";
 import RelatedPost from "@/components/RelatedPost";
 import Footer from "@/components/Footer";
-import Cart from "@/components/Cart";
 
 const AsgaardSofaDetailPage = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -17,14 +15,14 @@ const AsgaardSofaDetailPage = () => {
 
   const handleAddToCart = () => {
     const product = {
-      id: "1",
+      id: "1", // Can be dynamically updated based on product details
       name: "Asgaard Sofa",
       price: 30000,
       image: "/images/Asgaard.png",
       quantity: 1,
     };
     addToCart(product);
-    setIsCartOpen(true);
+    setIsCartOpen(true); // Open the cart after adding the item
   };
 
   return (
@@ -44,9 +42,7 @@ const AsgaardSofaDetailPage = () => {
             {["1", "2", "3", "4"].map((img, index) => (
               <div
                 key={index}
-                className={`w-[80px] h-[80px] ${
-                  index === 2 ? "bg-[#FF9E5]" : ""
-                } flex justify-center items-center`}
+                className={`w-[80px] h-[80px] ${index === 2 ? "bg-[#FF9E5]" : ""} flex justify-center items-center`}
               >
                 <Image
                   src={`/images/${img}.png`}
@@ -71,12 +67,8 @@ const AsgaardSofaDetailPage = () => {
         </div>
 
         <div className="w-full lg:w-[500px] h-full pl-8 my-1 flex flex-col justify-between">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mt-1">
-            Asgaard Sofa
-          </h1>
-          <p className="text-lg sm:text-xl font-semibold text-gray-900 mt-1">
-            Rs. 30,000.00
-          </p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mt-1">Asgaard Sofa</h1>
+          <p className="text-lg sm:text-xl font-semibold text-gray-900 mt-1">Rs. 30,000.00</p>
 
           <div className="flex items-center mt-1">
             <div className="flex text-yellow-500">
@@ -88,21 +80,14 @@ const AsgaardSofaDetailPage = () => {
           </div>
 
           <p className="text-gray-700 mb-4 mt-1">
-            Setting the bar as one of the loudest speakers in its class, the
-            Kilburn is a compact, stout-hearted hero with a well-balanced audio
-            which boasts a clear midrange and extended highs for a sound.
+            Setting the bar as one of the loudest speakers in its class, the Kilburn is a compact, stout-hearted hero with a well-balanced audio which boasts a clear midrange and extended highs for a sound.
           </p>
 
           <div className="w-full sm:w-[140px] mb-4">
-            <h3 className="text-sm sm:text-lg font-semibold text-black mt-1">
-              Available Sizes
-            </h3>
+            <h3 className="text-sm sm:text-lg font-semibold text-black mt-1">Available Sizes</h3>
             <div className="flex text-black gap-4 mt-2">
               {["L", "XL", "XXL"].map((size) => (
-                <button
-                  key={size}
-                  className="py-2 px-4 border border-gray-300 rounded-lg"
-                >
+                <button key={size} className="py-2 px-4 border border-gray-300 rounded-lg">
                   {size}
                 </button>
               ))}
@@ -110,15 +95,10 @@ const AsgaardSofaDetailPage = () => {
           </div>
 
           <div className="mb-4">
-            <h3 className="text-sm sm:text-lg font-semibold text-gray-800 mt-1">
-              Select Color
-            </h3>
+            <h3 className="text-sm sm:text-lg font-semibold text-gray-800 mt-1">Select Color</h3>
             <div className="flex gap-4 mt-2">
               {["gray-800", "blue-500", "red-500"].map((color) => (
-                <button
-                  key={color}
-                  className={`w-8 h-8 rounded-full bg-${color}`}
-                ></button>
+                <button key={color} className={`w-8 h-8 rounded-full bg-${color}`}></button>
               ))}
             </div>
           </div>
