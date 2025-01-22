@@ -93,7 +93,7 @@ const AdminPage = () => {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white shadow-sm p-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800">Welcome, Admin!</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Welcome Admin!</h1>
           <button
             onClick={handleLogout}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
@@ -107,7 +107,7 @@ const AdminPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white p-4 rounded-lg shadow-sm">
               <h3 className="text-lg font-bold text-gray-800">Total Sales</h3>
-              <p className="text-2xl font-semibold text-blue-600">$24,000</p>
+              <p className="text-2xl font-semibold text-blue-600">$24000</p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-sm">
               <h3 className="text-lg font-bold text-gray-800">Orders</h3>
