@@ -35,7 +35,7 @@ const Auth = () => {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-extrabold text-gray-800">Welcome Back!</h1>
           <p className="text-gray-600 mt-2">
-            Please log in to your account to continue. We're excited to have you!
+            Please log in to your account to continue. We&#39;re excited to have you!
           </p>
         </div>
 
@@ -70,7 +70,7 @@ const Auth = () => {
         {/* Bottom Section */}
         <div className="mt-8 text-center text-gray-600">
           <p>
-            Don&apos;t have an account?{' '}
+            Don&#39;t have an account?{' '}
             <a
               href="/signup"
               className="text-blue-600 hover:underline font-medium"
