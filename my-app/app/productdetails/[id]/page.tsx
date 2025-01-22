@@ -1,11 +1,13 @@
-'use client'
+"use client";
 
 import { client } from '@/sanity/lib/client';
 import { useCart } from '@/app/context/CartContext';
+import { useWishlist } from '@/components/wishlist-context';  // Import wishlist context
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/NavBar';
 import Footer from '@/components/Footer';
+import ReviewsAndRatings from '@/components/ReviewsAndRatings';
 
 interface Product {
   id: string;
@@ -18,6 +20,10 @@ interface Product {
 export default function ProductDetail({ params }: { params: { id: string } }) {
   const [product, setProduct] = useState<Product | null>(null);
   const { addToCart } = useCart();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();  // Access wishlist functions
+  
+  // Notification state
+  const [notification, setNotification] = useState<string | null>(null);
 
   // Fetch product details
   useEffect(() => {
@@ -62,12 +68,28 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
         image: product.img,
         quantity: 1,
       });
+      setNotification('Product added to cart!');
+      setTimeout(() => setNotification(null), 3000); // Dismiss after 3 seconds
     }
+  };
+
+  // Check if product is already in the wishlist
+  const isInWishlist = wishlist.includes(product.id);
+
+  const handleAddToWishlist = () => {
+    if (isInWishlist) {
+      removeFromWishlist(product.id);  // Remove from wishlist if already there
+      setNotification('Product removed from wishlist!');
+    } else {
+      addToWishlist(product.id);  // Add to wishlist if not there
+      setNotification('Product added to wishlist!');
+    }
+    setTimeout(() => setNotification(null), 3000); // Dismiss after 3 seconds
   };
 
   return (
     <div>
-        <Navbar/>
+      <Navbar />
       <section className="text-gray-600 body-font overflow-hidden">
         <div className="container px-5 py-24 mx-auto">
           <div className="lg:w-4/5 mx-auto flex flex-wrap">
@@ -127,10 +149,25 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                   Add To Cart
                 </button>
               </div>
+
+              {/* Wishlist Button */}
+              <button
+                onClick={handleAddToWishlist}
+                className={`mt-4 px-4 py-2 text-white rounded-full ${isInWishlist ? 'bg-red-500' : 'bg-blue-500'} hover:bg-opacity-80`}
+              >
+                {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              </button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Notification */}
+      {notification && (
+        <div className="fixed top-16 left-1/2 transform -translate-x-1/2 bg-indigo-500 text-white p-3 rounded-md shadow-md">
+          {notification}
+        </div>
+      )}
 
       <hr />
 
@@ -167,8 +204,8 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
           <div className="w-[250px]  md:w-[400px] md:h-[400px]">
             <Image
               src={product.img}
-              width={400}
-              height={400}
+              width={300}
+              height={300}
               alt="hello"
               className=" object-cover"
             />
@@ -176,16 +213,21 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
           <div className="w-[250px]  md:w-[400px] md:h-[400px]">
             <Image
               src={product.img}
-              width={400}
-              height={400}
+              width={300}
+              height={300}
               alt="hello"
               className=" object-cover"
             />
           </div>
         </div>
+        
       </div>
+  
       <br /><br /><br />
-      <Footer/>
+      <div className='mt-6'>
+        <ReviewsAndRatings />
+      </div>
+      <Footer />
     </div>
   );
 }

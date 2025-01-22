@@ -109,10 +109,10 @@ const Navbar: React.FC<NavbarProps> = ({ bgColor = "bg-[#FBEBB5]" }) => {
         <Link href="/account">
           <FaUserAlt className="hover:text-gray-600" />
         </Link>
-        <Link href="/search">
+        <Link href="/shop">
           <FaSearch className="hover:text-gray-600" />
         </Link>
-        <Link href="/favorites">
+        <Link href="/wishlist">
           <FaHeart className="hover:text-gray-600" />
         </Link>
         <Link href="/cart">

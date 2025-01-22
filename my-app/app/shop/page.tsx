@@ -5,17 +5,18 @@ import Navbar from "@/components/NavBar";
 import Products from "@/components/Products";
 import ShopBanner from "@/components/ShopBanner";
 import Footer from "@/components/Footer";
-import {
-  SlidersHorizontal,
-  GripHorizontal,
-  AlignVerticalSpaceAround,
-} from "lucide-react";
+import { SlidersHorizontal, GripHorizontal, AlignVerticalSpaceAround } from "lucide-react";
+import Category from "@/components/Category";
+import SearchBar from "@/components/SearchBar";// Import SearchBar component
+import Link from "next/link";
 
 const Shop = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 16; // Number of products per page
   const [totalProducts, setTotalProducts] = useState(0); // Track total products
   const [sortOption, setSortOption] = useState("default"); // Track sorting option
+  const [selectedCategory, setSelectedCategory] = useState<string>(""); // Track selected category
+  const [searchQuery, setSearchQuery] = useState<string>(""); // Track search query
 
   const handleTotalProducts = (count: number) => {
     setTotalProducts(count);
@@ -33,6 +34,11 @@ const Shop = () => {
     if (currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
     }
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query); // Update the search query
+    setCurrentPage(1); // Reset to the first page when the search query changes
   };
 
   return (
@@ -56,15 +62,7 @@ const Shop = () => {
         <div className="flex items-center gap-6 sm:gap-4">
           <SlidersHorizontal className="text-gray-600 text-lg" />
           <span className="text-gray-800 text-sm font-medium">Filter</span>
-          <div className="flex items-center gap-4">
-            <GripHorizontal className="text-gray-600 text-lg cursor-pointer" />
-            <AlignVerticalSpaceAround className="text-gray-600 text-lg cursor-pointer" />
-            <div className="w-[2px] h-[30px] bg-gray-400 hidden sm:block" />
-            <span className="text-gray-800 text-sm font-medium">
-              Showing {(currentPage - 1) * itemsPerPage + 1}-
-              {Math.min(currentPage * itemsPerPage, totalProducts)} of {totalProducts}
-            </span>
-          </div>
+          <Category onCategorySelect={setSelectedCategory} />
         </div>
 
         <div className="flex items-center gap-4">
@@ -84,13 +82,28 @@ const Shop = () => {
         </div>
       </div>
 
+      {/* Search Bar */}
+      <div className="w-full flex p-6 bg-gray-100 items-center justify-between">
+  <SearchBar onSearch={handleSearch} />
+  <Link href="/compare">
+    <button className="flex items-center border bg-white border-gray-300 rounded-lg p-2 w-full max-w-xs">
+      Comparision of Products
+    </button>
+  </Link>
+</div>
+
+
+
+
       {/* Products Section */}
       <div className="flex-grow">
         <Products
           currentPage={currentPage}
           itemsPerPage={itemsPerPage}
-          sortOption={sortOption} // Pass the sorting option to Products
+          sortOption={sortOption}
           onTotalProducts={handleTotalProducts}
+          selectedCategory={selectedCategory}
+          searchQuery={searchQuery} // Pass search query to Products component
         />
       </div>
 

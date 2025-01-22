@@ -22,6 +22,8 @@ interface ProductsProps {
   currentPage: number;
   itemsPerPage: number;
   sortOption: string;
+  selectedCategory: string; // New prop for selected category
+  searchQuery: string; // Add searchQuery prop
   onTotalProducts: (count: number) => void;
 }
 
@@ -29,6 +31,8 @@ export default function Products({
   currentPage,
   itemsPerPage,
   sortOption,
+  selectedCategory, // Destructure new prop
+  searchQuery, // Destructure searchQuery prop
   onTotalProducts,
 }: ProductsProps) {
   const [data, setData] = useState<Product[]>([]);
@@ -51,11 +55,26 @@ export default function Products({
   useEffect(() => {
     const fetchData = async () => {
       const fetchedData = await client.fetch(query);
-      onTotalProducts(fetchedData.length); // Update total products count
-      setData(fetchedData);
+
+      // Filter products based on the selected category
+      const filteredByCategory = selectedCategory
+        ? fetchedData.filter((product: Product) => product.category === selectedCategory)
+        : fetchedData;
+
+      // Filter products based on the searchQuery
+      const filteredData = filteredByCategory.filter((product: Product) => {
+        const lowerCaseSearchQuery = searchQuery.toLowerCase();
+        return (
+          product.name.toLowerCase().includes(lowerCaseSearchQuery) ||
+          product.description.toLowerCase().includes(lowerCaseSearchQuery)
+        );
+      });
+
+      onTotalProducts(filteredData.length); // Update total products count
+      setData(filteredData);
     };
     fetchData();
-  }, [query, onTotalProducts]);
+  }, [query, selectedCategory, searchQuery, onTotalProducts]); // Include searchQuery as a dependency
 
   // Sorting logic based on selected option
   let sortedData = [...data];

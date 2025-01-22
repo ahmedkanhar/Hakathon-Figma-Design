@@ -1,100 +1,92 @@
-
 import { createClient } from '@sanity/client';
-import axios from 'axios';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import path from 'path';
+import fetch from 'node-fetch';
 
-// Load environment variables from .env.local
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
-
-// Create Sanity client
+// Initialize Sanity client
 const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  useCdn: false,
-  token: process.env.SANITY_API_TOKEN,
-  apiVersion: '2021-08-31',
+  projectId: "pt0vmpnh",
+  dataset: "production",
+  useCdn: false, // Set to true if you want faster reads
+  apiVersion: '2025-01-13',
+  token: "skQrSoWdqX66022NsMzJ5rU4mfjdvZVbsN7F2BUCyxTPtcwVn2ZDKbluK4qQx7DpKCwcxJPQPedDaRaOQf7cKy9jNqwrtOmqsn5UUFNckfR14mKwaORicF6wGXuyWsDJB6Zb5KqBj59srLAA8GFUAPuVrYZCGarrrMNy9LGllEa0ycOdEXPO", // Replace with your Sanity token
 });
 
-// Function to upload image to Sanity
+// Function to upload an image to Sanity
 async function uploadImageToSanity(imageUrl) {
   try {
     console.log(`Uploading image: ${imageUrl}`);
 
-    // Fetch image from URL
-    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-    const buffer = Buffer.from(response.data);
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${imageUrl}`);
+    }
 
-    // Upload image to Sanity
-    const asset = await client.assets.upload('image', buffer, {
+    const buffer = await response.arrayBuffer();
+    const bufferImage = Buffer.from(buffer);
+
+    const asset = await client.assets.upload('image', bufferImage, {
       filename: imageUrl.split('/').pop(),
     });
 
     console.log(`Image uploaded successfully: ${asset._id}`);
     return asset._id;
   } catch (error) {
-    console.error(`Failed to upload image: ${imageUrl}`, error.message);
+    console.error('Failed to upload image:', imageUrl, error);
     return null;
   }
 }
 
-// Function to import data into Sanity
-async function importData() {
+// Function to upload a single product to Sanity
+async function uploadProduct(product) {
   try {
-    console.log('Fetching products from API...');
-    const response = await axios.get('https://template-0-beta.vercel.app/api/product');
-    const products = response.data;
+    const imageId = await uploadImageToSanity(product.imagePath);
 
-    console.log(`Fetched ${products.length} products`);
-
-    if (!Array.isArray(products) || products.length === 0) {
-      console.log('No products found in the response!');
-      return;
-    }
-
-    for (const product of products) {
-      console.log(`Processing product: ${product.name}`);
-
-      let imageRef = null;
-      if (product.imagePath) {
-        imageRef = await uploadImageToSanity(product.imagePath);
-      }
-
-      // Prepare the Sanity document for the product
-      const sanityProduct = {
-        _type: 'product', // Change type to 'product'
-        id: product.id, // Assuming the API provides a unique ID
+    if (imageId) {
+      const document = {
+        _type: 'product',
+        id: product.id,
         name: product.name,
-        price: product.price,
-        description: product.description || '', // Fallback to empty string if missing
-        discountPercentage: product.discountPercentage || 0, // Default to 0 if not provided
-        isFeaturedProduct: product.isFeaturedProduct || false, // Default to false if not provided
-        stockLevel: product.stockLevel || 0, // Default to 0 if not provided
-        category: product.category || 'Uncategorized', // Default to 'Uncategorized' if missing
-        image: imageRef
-          ? {
-              _type: 'imagePath',
-              asset: {
-                _type: 'reference',
-                _ref: imageRef, // Reference to the uploaded image
-              },
-            }
-          : undefined,
+        image: {
+          _type: 'image',
+          asset: {
+            _ref: imageId,
+          },
+        },
+        price: parseFloat(product.price), // Ensure the price is a number
+        description: product.description,
+        discountPercentage: product.discountPercentage,
+        isFeaturedProduct: product.isFeaturedProduct,
+        stockLevel: product.stockLevel,
+        category: product.category,
       };
 
-      console.log('Uploading product to Sanity:', sanityProduct.name);
-      const result = await client.create(sanityProduct);
-      console.log(`Product uploaded successfully: ${result._id}`);
+      const createdProduct = await client.create(document);
+      console.log(`Product "${product.name}" uploaded successfully:`, createdProduct);
+    } else {
+      console.log(`Product "${product.name}" skipped due to image upload failure.`);
     }
-
-    console.log('Data import completed successfully!');
   } catch (error) {
-    console.error('Error importing data:', error.message);
+    console.error('Error uploading product:', error);
   }
 }
 
-// Call the import function to start the process
-importData();
+// Function to fetch products from the provided API and upload them to Sanity
+async function migrateProducts() {
+  try {
+    const response = await fetch('https://template-0-beta.vercel.app/api/product');
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const products = await response.json();
+
+    for (const product of products) {
+      await uploadProduct(product);
+    }
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  }
+}
+
+// Start the migration
+migrateProducts();

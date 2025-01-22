@@ -40,6 +40,12 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link href="/dashboard" className="text-sm text-black hover:underline">
+                  Dashboard
+                </Link>
+              </li>
+              
             </ul>
           </div>
 
@@ -50,6 +56,10 @@ const Footer = () => {
               <li className="text-sm text-black">Payment Options</li>
               <li className="text-sm text-black">Returns</li>
               <li className="text-sm text-black">Privacy Policy</li>
+              <Link href="/form" className="text-sm text-black hover:underline">
+                  Sign Up
+                </Link>
+                
             </ul>
           </div>
         </div>

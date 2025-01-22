@@ -4,6 +4,7 @@ import Banner3 from "@/components/Banner3";
 import Login from "@/components/LogIn"
 import ShopBanner from "@/components/ShopBanner";
 import Footer from "@/components/Footer";
+import Auth from "@/components/Auth";
 
 const AccountPage = () => {
   return (
@@ -13,7 +14,7 @@ const AccountPage = () => {
        <Banner3/>
     </div>
     <div>
-        <Login/>
+        <Auth/>
     </div>
     <div>
      <ShopBanner/>
